@@ -27,6 +27,16 @@ export interface GetUserByEmailResponse {
   user: User | undefined;
 }
 
+export interface CreateUserRequest {
+  username: string;
+  email: string;
+  passwordHash: string;
+}
+
+export interface CreateUserResponse {
+  user: User | undefined;
+}
+
 export interface User {
   id: string;
   username: string;
@@ -42,6 +52,8 @@ export interface UserServiceClient {
   getUserById(request: GetUserByIdRequest): Observable<GetUserByIdResponse>;
 
   getUserByEmail(request: GetUserByEmailRequest): Observable<GetUserByEmailResponse>;
+
+  createUser(request: CreateUserRequest): Observable<CreateUserResponse>;
 }
 
 export interface UserServiceController {
@@ -52,11 +64,15 @@ export interface UserServiceController {
   getUserByEmail(
     request: GetUserByEmailRequest,
   ): Promise<GetUserByEmailResponse> | Observable<GetUserByEmailResponse> | GetUserByEmailResponse;
+
+  createUser(
+    request: CreateUserRequest,
+  ): Promise<CreateUserResponse> | Observable<CreateUserResponse> | CreateUserResponse;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getUserById", "getUserByEmail"];
+    const grpcMethods: string[] = ["getUserById", "getUserByEmail", "createUser"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);
