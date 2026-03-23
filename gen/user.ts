@@ -42,6 +42,7 @@ export interface User {
   username: string;
   email: string;
   avatarUrl: string;
+  passwordHash: string;
   createdAt: Timestamp | undefined;
   updatedAt: Timestamp | undefined;
 }
