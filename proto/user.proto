@@ -5,22 +5,16 @@ package user.v1;
 import "google/protobuf/timestamp.proto";
 
 service UserService {
-  rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
-  rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
-  rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
 }
 
-message GetUserByIdRequest {
-  string user_id = 1;
-}
-
-message GetUserByEmailRequest {
-  string email = 1;
-}
-
-message GetUserByUsernameRequest {
-  string username = 1;
+message GetUserRequest {
+  oneof identifier {
+    string user_id = 1;
+    string email = 2;
+    string username = 3;
+  }
 }
 
 message CreateUserRequest {
@@ -29,15 +23,7 @@ message CreateUserRequest {
   string password_hash = 3;
 }
 
-message GetUserByUsernameResponse {
-  User user = 1;
-}
-
-message GetUserByIdResponse {
-  User user = 1;
-}
-
-message GetUserByEmailResponse {
+message GetUserResponse {
   User user = 1;
 }
 

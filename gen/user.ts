@@ -11,16 +11,10 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "user.v1";
 
-export interface GetUserByIdRequest {
-  userId: string;
-}
-
-export interface GetUserByEmailRequest {
-  email: string;
-}
-
-export interface GetUserByUsernameRequest {
-  username: string;
+export interface GetUserRequest {
+  userId?: string | undefined;
+  email?: string | undefined;
+  username?: string | undefined;
 }
 
 export interface CreateUserRequest {
@@ -29,15 +23,7 @@ export interface CreateUserRequest {
   passwordHash: string;
 }
 
-export interface GetUserByUsernameResponse {
-  user: User | undefined;
-}
-
-export interface GetUserByIdResponse {
-  user: User | undefined;
-}
-
-export interface GetUserByEmailResponse {
+export interface GetUserResponse {
   user: User | undefined;
 }
 
@@ -58,27 +44,13 @@ export interface User {
 export const USER_V1_PACKAGE_NAME = "user.v1";
 
 export interface UserServiceClient {
-  getUserById(request: GetUserByIdRequest): Observable<GetUserByIdResponse>;
-
-  getUserByEmail(request: GetUserByEmailRequest): Observable<GetUserByEmailResponse>;
-
-  getUserByUsername(request: GetUserByUsernameRequest): Observable<GetUserByUsernameResponse>;
+  getUser(request: GetUserRequest): Observable<GetUserResponse>;
 
   createUser(request: CreateUserRequest): Observable<CreateUserResponse>;
 }
 
 export interface UserServiceController {
-  getUserById(
-    request: GetUserByIdRequest,
-  ): Promise<GetUserByIdResponse> | Observable<GetUserByIdResponse> | GetUserByIdResponse;
-
-  getUserByEmail(
-    request: GetUserByEmailRequest,
-  ): Promise<GetUserByEmailResponse> | Observable<GetUserByEmailResponse> | GetUserByEmailResponse;
-
-  getUserByUsername(
-    request: GetUserByUsernameRequest,
-  ): Promise<GetUserByUsernameResponse> | Observable<GetUserByUsernameResponse> | GetUserByUsernameResponse;
+  getUser(request: GetUserRequest): Promise<GetUserResponse> | Observable<GetUserResponse> | GetUserResponse;
 
   createUser(
     request: CreateUserRequest,
@@ -87,7 +59,7 @@ export interface UserServiceController {
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["getUserById", "getUserByEmail", "getUserByUsername", "createUser"];
+    const grpcMethods: string[] = ["getUser", "createUser"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);
